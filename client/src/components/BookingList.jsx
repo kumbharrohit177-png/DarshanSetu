@@ -144,36 +144,35 @@ const BookingList = ({ bookings, onRefresh }) => {
                                 </button>
                             )}
                         </div>
-                    </div>
 
-                        {/* Ticket Perforated Line Visual */ }
-                <div className="hidden sm:block w-[2px] bg-gray-200 border-l border-dashed border-gray-400 relative my-4">
-                    <div className="absolute -top-6 -left-2 w-4 h-4 rounded-full bg-gray-50 z-10"></div>
-                    <div className="absolute -bottom-6 -left-2 w-4 h-4 rounded-full bg-gray-50 z-10"></div>
-                </div>
-
-                {/* QR Section */ }
-                {
-                    !isCancelled && (
-                        <div className="sm:w-48 bg-gray-50 p-6 flex flex-col items-center justify-center border-t sm:border-t-0 sm:border-l border-dashed border-gray-200">
-                            <div className="bg-white p-2 rounded-xl shadow-sm border border-gray-200">
-                                <div className="h-32 w-32 bg-white flex items-center justify-center overflow-hidden mix-blend-multiply">
-                                    <img
-                                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${booking.qrCode || booking._id}`}
-                                        alt="Booking QR Code"
-                                        className="w-full h-full object-contain"
-                                    />
-                                </div>
-                            </div>
-                            <span className="text-[10px] font-mono text-gray-400 mt-3 text-center break-all max-w-[120px] select-all">
-                                {booking._id}
-                            </span>
+                        {/* Ticket Perforated Line Visual */}
+                        <div className="hidden sm:block w-[2px] bg-gray-200 border-l border-dashed border-gray-400 relative my-4">
+                            <div className="absolute -top-6 -left-2 w-4 h-4 rounded-full bg-gray-50 z-10"></div>
+                            <div className="absolute -bottom-6 -left-2 w-4 h-4 rounded-full bg-gray-50 z-10"></div>
                         </div>
-                    )
-                }
+
+                        {/* QR Section */}
+                        {
+                            !isCancelled && (
+                                <div className="sm:w-48 bg-gray-50 p-6 flex flex-col items-center justify-center border-t sm:border-t-0 sm:border-l border-dashed border-gray-200">
+                                    <div className="bg-white p-2 rounded-xl shadow-sm border border-gray-200">
+                                        <div className="h-32 w-32 bg-white flex items-center justify-center overflow-hidden mix-blend-multiply">
+                                            <img
+                                                src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${booking.qrCode || booking._id}`}
+                                                alt="Booking QR Code"
+                                                className="w-full h-full object-contain"
+                                            />
+                                        </div>
+                                    </div>
+                                    <span className="text-[10px] font-mono text-gray-400 mt-3 text-center break-all max-w-[120px] select-all">
+                                        {booking._id}
+                                    </span>
+                                </div>
+                            )
+                        }
                     </div>
-    );
-})}
+                );
+            })}
         </div >
     );
 };

@@ -9,7 +9,7 @@ const DispatchModal = ({ incident, resources, onClose }) => {
     const [useAutoRouting, setUseAutoRouting] = useState(true);
     const [loadingPriorities, setLoadingPriorities] = useState(false);
 
-    const availableResources = resources.filter(r => r.status === 'available' || r.status === 'en_route');
+    const availableResources = resources.filter(r => r.status?.toLowerCase() === 'available' || r.status?.toLowerCase() === 'en_route');
 
     // Fetch prioritized resources if incident has coordinates
     useEffect(() => {
@@ -139,9 +139,9 @@ const DispatchModal = ({ incident, resources, onClose }) => {
                     {incident.severity && (
                         <p className="text-xs mt-1">
                             <span className={`px-2 py-0.5 rounded font-bold ${incident.severity === 'critical' ? 'bg-red-100 text-red-700' :
-                                    incident.severity === 'high' ? 'bg-orange-100 text-orange-700' :
-                                        incident.severity === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                                            'bg-blue-100 text-blue-700'
+                                incident.severity === 'high' ? 'bg-orange-100 text-orange-700' :
+                                    incident.severity === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                                        'bg-blue-100 text-blue-700'
                                 }`}>
                                 {incident.severity?.toUpperCase() || 'UNKNOWN'}
                             </span>
@@ -199,8 +199,8 @@ const DispatchModal = ({ incident, resources, onClose }) => {
                                         }
                                     }}
                                     className={`p-3 rounded-lg border transition-all ${isSelected
-                                            ? 'bg-blue-50 border-blue-500 shadow-sm ring-2 ring-blue-300'
-                                            : 'bg-white border-gray-200 hover:border-gray-400'
+                                        ? 'bg-blue-50 border-blue-500 shadow-sm ring-2 ring-blue-300'
+                                        : 'bg-white border-gray-200 hover:border-gray-400'
                                         } ${!useAutoRouting ? 'cursor-pointer' : 'cursor-default'}`}
                                 >
                                     <div className="flex justify-between items-start mb-2">
@@ -250,8 +250,8 @@ const DispatchModal = ({ incident, resources, onClose }) => {
                     onClick={handleDispatch}
                     disabled={(sortedResources.length === 0) || loading || loadingPriorities}
                     className={`w-full py-3 rounded-lg font-bold uppercase tracking-wider transition-all shadow-md ${((sortedResources.length === 0) || loading || loadingPriorities)
-                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                            : 'bg-red-600 hover:bg-red-700 text-white shadow-red-200 active:scale-[0.98]'
+                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                        : 'bg-red-600 hover:bg-red-700 text-white shadow-red-200 active:scale-[0.98]'
                         }`}
                 >
                     {loading ? 'Dispatching...' : loadingPriorities ? 'Calculating...' : sortedResources.length === 0 ? 'NO RESOURCES AVAILABLE' : 'CONFIRM DISPATCH'}

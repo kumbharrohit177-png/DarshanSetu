@@ -77,9 +77,16 @@ const BookingForm = ({ onBookingSuccess, templeId }) => {
                 throw new Error(`Only ${selectedSlot.capacity - selectedSlot.bookedCount} slots remaining.`);
             }
 
+            // Sanitize members data
+            const sanitizedMembers = members.map(m => ({
+                name: m.name,
+                age: m.age ? parseInt(m.age) : null,
+                gender: m.gender || 'male'
+            }));
+
             await api.post('/bookings', {
                 slotId: selectedSlot._id,
-                members: members,
+                members: sanitizedMembers,
                 specialAssistance: specialAssistance
             });
             setLoading(false);
@@ -162,8 +169,8 @@ const BookingForm = ({ onBookingSuccess, templeId }) => {
                                         key={num}
                                         onClick={() => handleTicketCountChange(num)}
                                         className={`flex-1 py-2 rounded-md font-bold transition-all ${ticketCount === num
-                                                ? 'bg-orange-600 text-white shadow-md transform scale-105'
-                                                : 'bg-white text-gray-700 border border-gray-300 hover:bg-orange-100'
+                                            ? 'bg-orange-600 text-white shadow-md transform scale-105'
+                                            : 'bg-white text-gray-700 border border-gray-300 hover:bg-orange-100'
                                             }`}
                                     >
                                         {num}

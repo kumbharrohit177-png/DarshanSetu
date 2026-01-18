@@ -99,59 +99,82 @@ const BookingList = ({ bookings, onRefresh }) => {
                                             <p className="font-bold text-gray-800 text-base">{booking.slot.startTime} - {booking.slot.endTime}</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-start gap-3 group/item">
-                                        <MapPin size={16} className="text-gray-400 mt-0.5 group-hover/item:text-primary-600 transition-colors" />
-                                        <div>
-                                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Temple & Location</p>
-                                            <p className="font-bold text-gray-800 text-base leading-tight">
-                                                {booking.slot.temple ? booking.slot.temple.name : (booking.slot.zone || 'Unknown')}
-                                            </p>
-                                            <p className="text-gray-500 text-xs mt-0.5">
-                                                {booking.slot.temple ? booking.slot.temple.location : ''}
-                                            </p>
+                                </div>
+                                <div className="flex items-start gap-3 group/item">
+                                    <MapPin size={16} className="text-gray-400 mt-0.5 group-hover/item:text-primary-600 transition-colors" />
+                                    <div>
+                                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Temple & Location</p>
+                                        <p className="font-bold text-gray-800 text-base leading-tight">
+                                            {booking.slot.temple ? booking.slot.temple.name : (booking.slot.zone || 'Unknown')}
+                                        </p>
+                                        <p className="text-gray-500 text-xs mt-0.5">
+                                            {booking.slot.temple ? booking.slot.temple.location : ''}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Family Members Display */}
+                                {booking.members && booking.members.length > 0 && (
+                                    <div className="pt-2 border-t border-gray-100 mt-2">
+                                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 flex items-center gap-1">
+                                            <Accessibility size={12} />
+                                            Group Members ({booking.members.length + 1})
+                                        </p>
+                                        <div className="flex flex-wrap gap-2">
+                                            <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-700 border border-gray-200">
+                                                You (Primary)
+                                            </span>
+                                            {booking.members.map((member, idx) => (
+                                                <span key={idx} className="text-xs bg-orange-50 px-2 py-1 rounded text-orange-800 border border-orange-100 font-medium">
+                                                    {member.name} {member.age ? `(${member.age})` : ''}
+                                                </span>
+                                            ))}
                                         </div>
                                     </div>
-                                </div>
+                                )}
                             </div>
-
-                            {/* Cancel Button */}
-                            {canCancel && (
-                                <button
-                                    onClick={() => handleCancel(booking._id)}
-                                    className="mt-6 text-sm text-red-600 hover:text-red-700 hover:underline font-semibold self-start"
-                                >
-                                    Cancel Booking
-                                </button>
-                            )}
                         </div>
 
-                        {/* Ticket Perforated Line Visual */}
-                        <div className="hidden sm:block w-[2px] bg-gray-200 border-l border-dashed border-gray-400 relative my-4">
-                            <div className="absolute -top-6 -left-2 w-4 h-4 rounded-full bg-gray-50 z-10"></div>
-                            <div className="absolute -bottom-6 -left-2 w-4 h-4 rounded-full bg-gray-50 z-10"></div>
-                        </div>
-
-                        {/* QR Section */}
-                        {!isCancelled && (
-                            <div className="sm:w-48 bg-gray-50 p-6 flex flex-col items-center justify-center border-t sm:border-t-0 sm:border-l border-dashed border-gray-200">
-                                <div className="bg-white p-2 rounded-xl shadow-sm border border-gray-200">
-                                    <div className="h-32 w-32 bg-white flex items-center justify-center overflow-hidden mix-blend-multiply">
-                                        <img
-                                            src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${booking.qrCode || booking._id}`}
-                                            alt="Booking QR Code"
-                                            className="w-full h-full object-contain"
-                                        />
-                                    </div>
-                                </div>
-                                <span className="text-[10px] font-mono text-gray-400 mt-3 text-center break-all max-w-[120px] select-all">
-                                    {booking._id}
-                                </span>
-                            </div>
+                        {/* Cancel Button */}
+                        {canCancel && (
+                            <button
+                                onClick={() => handleCancel(booking._id)}
+                                className="mt-6 text-sm text-red-600 hover:text-red-700 hover:underline font-semibold self-start"
+                            >
+                                Cancel Booking
+                            </button>
                         )}
                     </div>
-                );
-            })}
-        </div>
+
+                        {/* Ticket Perforated Line Visual */ }
+                <div className="hidden sm:block w-[2px] bg-gray-200 border-l border-dashed border-gray-400 relative my-4">
+                    <div className="absolute -top-6 -left-2 w-4 h-4 rounded-full bg-gray-50 z-10"></div>
+                    <div className="absolute -bottom-6 -left-2 w-4 h-4 rounded-full bg-gray-50 z-10"></div>
+                </div>
+
+                {/* QR Section */ }
+                {
+                    !isCancelled && (
+                        <div className="sm:w-48 bg-gray-50 p-6 flex flex-col items-center justify-center border-t sm:border-t-0 sm:border-l border-dashed border-gray-200">
+                            <div className="bg-white p-2 rounded-xl shadow-sm border border-gray-200">
+                                <div className="h-32 w-32 bg-white flex items-center justify-center overflow-hidden mix-blend-multiply">
+                                    <img
+                                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${booking.qrCode || booking._id}`}
+                                        alt="Booking QR Code"
+                                        className="w-full h-full object-contain"
+                                    />
+                                </div>
+                            </div>
+                            <span className="text-[10px] font-mono text-gray-400 mt-3 text-center break-all max-w-[120px] select-all">
+                                {booking._id}
+                            </span>
+                        </div>
+                    )
+                }
+                    </div>
+    );
+})}
+        </div >
     );
 };
 

@@ -6,7 +6,7 @@ const { createOrder, verifyPayment } = require('../controllers/paymentController
 // For now, allow public access for easier testing or add 'protect' if auth is ready.
 const { protect } = require('../middleware/authMiddleware');
 
-router.post('/order', protect, createOrder);
-router.post('/verify', protect, verifyPayment);
+router.post('/order', createOrder);
+router.post('/verify', verifyPayment);
 
 module.exports = router;

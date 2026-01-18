@@ -133,17 +133,17 @@ const BookingList = ({ bookings, onRefresh }) => {
                                     </div>
                                 )}
                             </div>
-                        </div>
 
-                        {/* Cancel Button */}
-                        {canCancel && (
-                            <button
-                                onClick={() => handleCancel(booking._id)}
-                                className="mt-6 text-sm text-red-600 hover:text-red-700 hover:underline font-semibold self-start"
-                            >
-                                Cancel Booking
-                            </button>
-                        )}
+                            {/* Cancel Button */}
+                            {canCancel && (
+                                <button
+                                    onClick={() => handleCancel(booking._id)}
+                                    className="mt-6 text-sm text-red-600 hover:text-red-700 hover:underline font-semibold self-start"
+                                >
+                                    Cancel Booking
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                         {/* Ticket Perforated Line Visual */ }

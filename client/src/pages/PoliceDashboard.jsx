@@ -94,8 +94,8 @@ const PoliceDashboard = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
                     {/* Left Column: Surveillance & Deployment */}
                     <div className="space-y-8">
-                        <div className="bg-white rounded-xl shadow-md p-1 border border-gray-200 overflow-hidden">
-                            <div className="p-4 border-b border-gray-100 flex justify-between items-center">
+                        <div className="bg-white rounded-xl shadow-md p-1 border border-gray-200 overflow-hidden h-[500px] flex flex-col">
+                            <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-white z-10 relative">
                                 <h2 className="text-xl font-bold flex items-center gap-2 text-gray-800">
                                     <MapIcon size={24} className="text-blue-600" />
                                     Live Surveillance Map
@@ -105,12 +105,14 @@ const PoliceDashboard = () => {
                                 </span>
                             </div>
 
-                            <LiveMedicalMap
-                                resources={resources}
-                                incidents={incidents.filter(i => i.status !== 'resolved')}
-                                pilgrims={Object.values(pilgrims)}
-                                onDispatch={handleDispatch}
-                            />
+                            <div className="flex-grow relative">
+                                <LiveMedicalMap
+                                    resources={resources}
+                                    incidents={incidents.filter(i => i.status !== 'resolved')}
+                                    pilgrims={Object.values(pilgrims)}
+                                    onDispatch={handleDispatch}
+                                />
+                            </div>
                         </div>
 
                         <DeploymentManager />

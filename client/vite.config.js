@@ -8,5 +8,8 @@ export default defineConfig(({ mode }) => {
     base: mode === 'production' && process.env.GITHUB_PAGES === 'true'
       ? '/temple-crowd-management/'
       : '/',
+    build: {
+      chunkSizeWarningLimit: 1000,
+    },
   }
 })

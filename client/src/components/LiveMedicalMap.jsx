@@ -267,7 +267,7 @@ const LiveMedicalMap = ({ resources, incidents, pilgrims, onDispatch }) => {
                                             res.status === 'en_route' ? 'bg-yellow-600' :
                                                 'bg-red-600'
                                             }`}>
-                                            {res.status.toUpperCase().replace('_', ' ')}
+                                            {(res.status?.toUpperCase() || 'UNKNOWN').replace('_', ' ')}
                                         </div>
                                         <p className="text-xs text-gray-500 mt-1">{res.contactNumber}</p>
                                         {res.location?.zone && (
@@ -333,7 +333,7 @@ const LiveMedicalMap = ({ resources, incidents, pilgrims, onDispatch }) => {
                                 <Popup>
                                     <div className="text-center min-w-[150px]">
                                         <h3 className="font-bold text-red-600">INCIDENT</h3>
-                                        <p className="text-sm font-semibold mb-1">{incident.type.toUpperCase()}</p>
+                                        <p className="text-sm font-semibold mb-1">{incident.type?.toUpperCase() || 'ACCIDENT'}</p>
                                         <p className="text-xs text-gray-600 mb-2">{incident.description}</p>
 
                                         {incident.status === 'open' && (

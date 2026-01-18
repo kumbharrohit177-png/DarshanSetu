@@ -15,7 +15,7 @@ const DispatchModal = ({ incident, resources, onClose }) => {
     useEffect(() => {
         const fetchPrioritized = async () => {
             if (!incident) return;
-            
+
             // Try to extract coordinates from location string if not in incident.coordinates
             let incidentCoords = incident.coordinates;
             if (!incidentCoords && incident.location) {
@@ -33,7 +33,7 @@ const DispatchModal = ({ incident, resources, onClose }) => {
                     };
                 }
             }
-            
+
             // Only fetch prioritized if we have coordinates
             if (incidentCoords) {
                 setLoadingPriorities(true);
@@ -57,7 +57,7 @@ const DispatchModal = ({ incident, resources, onClose }) => {
     }, [incident, useAutoRouting]);
 
     // Use prioritized resources if available, otherwise fallback to simple sorting
-    const sortedResources = prioritizedResources.length > 0 
+    const sortedResources = prioritizedResources.length > 0
         ? prioritizedResources.map(pr => pr.resource).filter(r => r) // Filter out any null resources
         : [...availableResources].sort((a, b) => {
             if (a.type === 'ambulance' && b.type !== 'ambulance') return -1;
@@ -71,20 +71,20 @@ const DispatchModal = ({ incident, resources, onClose }) => {
             alert("No available resources to dispatch. Please ensure medical resources are seeded and available.");
             return;
         }
-        
+
         // If auto-routing is off, require manual selection
         if (!useAutoRouting && !selectedResource) {
             alert("Please select a resource or enable auto-routing");
             return;
         }
-        
+
         setLoading(true);
         try {
             const response = await api.post(`/incidents/${incident._id}/dispatch`, {
                 resourceId: useAutoRouting ? null : selectedResource?._id,
                 useAutoRouting: useAutoRouting
             });
-            
+
             // Show success message
             if (response.data && response.data.resource) {
                 const resource = response.data.resource;
@@ -135,16 +135,15 @@ const DispatchModal = ({ incident, resources, onClose }) => {
 
                 <div className="mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <h3 className="text-sm text-gray-500 uppercase font-bold mb-1">Incident</h3>
-                    <p className="font-semibold text-gray-900 text-lg">{incident.type.toUpperCase()}</p>
+                    <p className="font-semibold text-gray-900 text-lg">{incident.type?.toUpperCase() || 'INCIDENT'}</p>
                     {incident.severity && (
                         <p className="text-xs mt-1">
-                            <span className={`px-2 py-0.5 rounded font-bold ${
-                                incident.severity === 'critical' ? 'bg-red-100 text-red-700' :
-                                incident.severity === 'high' ? 'bg-orange-100 text-orange-700' :
-                                incident.severity === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                                'bg-blue-100 text-blue-700'
-                            }`}>
-                                {incident.severity.toUpperCase()}
+                            <span className={`px-2 py-0.5 rounded font-bold ${incident.severity === 'critical' ? 'bg-red-100 text-red-700' :
+                                    incident.severity === 'high' ? 'bg-orange-100 text-orange-700' :
+                                        incident.severity === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                                            'bg-blue-100 text-blue-700'
+                                }`}>
+                                {incident.severity?.toUpperCase() || 'UNKNOWN'}
                             </span>
                         </p>
                     )}
@@ -199,11 +198,10 @@ const DispatchModal = ({ incident, resources, onClose }) => {
                                             setSelectedResource(resource);
                                         }
                                     }}
-                                    className={`p-3 rounded-lg border transition-all ${
-                                        isSelected
+                                    className={`p-3 rounded-lg border transition-all ${isSelected
                                             ? 'bg-blue-50 border-blue-500 shadow-sm ring-2 ring-blue-300'
                                             : 'bg-white border-gray-200 hover:border-gray-400'
-                                    } ${!useAutoRouting ? 'cursor-pointer' : 'cursor-default'}`}
+                                        } ${!useAutoRouting ? 'cursor-pointer' : 'cursor-default'}`}
                                 >
                                     <div className="flex justify-between items-start mb-2">
                                         <div className="flex-grow">
@@ -221,7 +219,7 @@ const DispatchModal = ({ incident, resources, onClose }) => {
                                             {resource.type.replace('_', ' ')}
                                         </span>
                                     </div>
-                                    
+
                                     {priorityData && (
                                         <div className="mt-2 pt-2 border-t border-gray-200 space-y-1">
                                             <div className="flex items-center gap-2 text-xs text-gray-600">
@@ -251,11 +249,10 @@ const DispatchModal = ({ incident, resources, onClose }) => {
                 <button
                     onClick={handleDispatch}
                     disabled={(sortedResources.length === 0) || loading || loadingPriorities}
-                    className={`w-full py-3 rounded-lg font-bold uppercase tracking-wider transition-all shadow-md ${
-                        ((sortedResources.length === 0) || loading || loadingPriorities)
+                    className={`w-full py-3 rounded-lg font-bold uppercase tracking-wider transition-all shadow-md ${((sortedResources.length === 0) || loading || loadingPriorities)
                             ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                             : 'bg-red-600 hover:bg-red-700 text-white shadow-red-200 active:scale-[0.98]'
-                    }`}
+                        }`}
                 >
                     {loading ? 'Dispatching...' : loadingPriorities ? 'Calculating...' : sortedResources.length === 0 ? 'NO RESOURCES AVAILABLE' : 'CONFIRM DISPATCH'}
                 </button>

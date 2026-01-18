@@ -13,8 +13,14 @@ console.log('Force Restart: Schema Update Reflected');
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:5173", // Vite default port
-    methods: ["GET", "POST"]
+    origin: [
+      "http://localhost:5173",
+      "https://tranquil-florentine-f9bc55.netlify.app",
+      "https://darshan-setu-client.onrender.com", // Future proofing
+      process.env.CLIENT_URL
+    ].filter(Boolean),
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 

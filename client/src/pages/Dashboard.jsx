@@ -6,7 +6,8 @@ import BookingForm from '../components/BookingForm';
 import SOSButton from '../components/SOSButton';
 import { ArrowLeft, Clock, CheckCircle } from 'lucide-react';
 
-import socket from '../utils/socket'; // Ensure socket is imported
+import socket from '../utils/socket';
+import NotificationToast from '../components/NotificationToast';
 
 const Dashboard = () => {
     const { user } = useAuth();
@@ -99,6 +100,7 @@ const Dashboard = () => {
 
     return (
         <div className="min-h-screen bg-pattern-mandala pb-12">
+            <NotificationToast />
             {/* Header / Hero Section */}
             <div className="relative bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 text-white pb-24 pt-12 px-4 sm:px-6 lg:px-8 overflow-hidden shadow-xl">
                 <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] animate-pulse"></div>
@@ -143,8 +145,8 @@ const Dashboard = () => {
                                             key={filter}
                                             onClick={() => setActiveFilter(filter)}
                                             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 border ${activeFilter === filter
-                                                    ? 'bg-orange-600 text-white border-orange-600 shadow-md'
-                                                    : 'bg-white text-gray-600 border-gray-200 hover:border-orange-300 hover:text-orange-600'
+                                                ? 'bg-orange-600 text-white border-orange-600 shadow-md'
+                                                : 'bg-white text-gray-600 border-gray-200 hover:border-orange-300 hover:text-orange-600'
                                                 }`}
                                         >
                                             {filter}

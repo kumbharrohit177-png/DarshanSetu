@@ -14,6 +14,7 @@ import MyBookings from './pages/MyBookings';
 import ProtectedRoute from './components/ProtectedRoute';
 import DebugSession from './components/DebugSession';
 import NotificationToast from './components/NotificationToast';
+import ChatBot from './components/ChatBot';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
 
           <Header />
           <NotificationToast />
+          <ChatBot />
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />

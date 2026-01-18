@@ -67,6 +67,7 @@ const deploymentRoutes = require('./routes/deploymentRoutes');
 const medicalRoutes = require('./routes/medicalRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/slots', slotRoutes);
@@ -77,6 +78,7 @@ app.use('/api/deployments', deploymentRoutes);
 app.use('/api/medical', medicalRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/chat', chatRoutes);
 app.post('/api/alerts/send', alertController.sendAlert);
 
 app.get('/', (req, res) => {

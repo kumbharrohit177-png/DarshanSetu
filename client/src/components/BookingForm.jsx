@@ -1,32 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import api from '../utils/api';
 import socket from '../utils/socket';
-import { Calendar, Clock, Users } from 'lucide-react';
+import { Calendar, Clock, User } from 'lucide-react';
 
 const BookingForm = ({ onBookingSuccess, templeId }) => {
     const [date, setDate] = useState('');
     const [slots, setSlots] = useState([]);
     const [selectedSlot, setSelectedSlot] = useState(null);
+    const [specialAssistance, setSpecialAssistance] = useState('none');
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-
-    useEffect(() => {
-        if (date && templeId) {
-            fetchSlots();
-        }
-    }, [date, templeId]);
-
-    useEffect(() => {
-        const handleSlotUpdate = ({ slotId, bookedCount }) => {
-            setSlots(prevSlots => prevSlots.map(slot =>
-                slot._id === slotId ? { ...slot, bookedCount } : slot
-            ));
-        };
-
-        socket.on('slot-update', handleSlotUpdate);
-        return () => socket.off('slot-update', handleSlotUpdate);
-    }, []);
 
     const fetchSlots = async () => {
         try {
@@ -37,6 +21,12 @@ const BookingForm = ({ onBookingSuccess, templeId }) => {
         }
     };
 
+    useEffect(() => {
+        if (date && templeId) {
+            fetchSlots();
+        }
+    }, [date, templeId]);
+
     const handleBook = async () => {
         if (!selectedSlot) return;
         setLoading(true);
@@ -44,7 +34,8 @@ const BookingForm = ({ onBookingSuccess, templeId }) => {
         try {
             await api.post('/bookings', {
                 slotId: selectedSlot._id,
-                members: members
+                members: members,
+                specialAssistance: specialAssistance
             });
             setLoading(false);
             onBookingSuccess();
@@ -112,14 +103,31 @@ const BookingForm = ({ onBookingSuccess, templeId }) => {
                 )}
 
                 {selectedSlot && (
-                    <div className="pt-4 border-t">
-                        <button
-                            onClick={handleBook}
-                            disabled={loading}
-                            className="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition shadow-md hover:shadow-lg disabled:opacity-70"
-                        >
-                            {loading ? 'Processing...' : 'Confirm Booking'}
-                        </button>
+                    <div className="space-y-4 pt-4 border-t">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Priority Access / Special Assistance</label>
+                            <select
+                                value={specialAssistance}
+                                onChange={(e) => setSpecialAssistance(e.target.value)}
+                                className="w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 p-2 border"
+                            >
+                                <option value="none">None (General Entry)</option>
+                                <option value="elderly">Elderly (Senior Citizens)</option>
+                                <option value="differently-abled">Differently Abled (Divyang)</option>
+                                <option value="women-with-children">Women with Children (Infants)</option>
+                            </select>
+                            <p className="text-xs text-gray-500 mt-1">Select if you require priority lane access.</p>
+                        </div>
+
+                        <div className="">
+                            <button
+                                onClick={handleBook}
+                                disabled={loading}
+                                className="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition shadow-md hover:shadow-lg disabled:opacity-70"
+                            >
+                                {loading ? 'Processing...' : 'Confirm Booking'}
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>

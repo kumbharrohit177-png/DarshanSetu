@@ -9,7 +9,7 @@ exports.createBooking = async (req, res) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-        const { slotId, members } = req.body;
+        const { slotId, members, specialAssistance } = req.body;
         const slot = await Slot.findById(slotId).session(session);
 
         if (!slot) {
@@ -35,6 +35,7 @@ exports.createBooking = async (req, res) => {
             user: req.user.id,
             slot: slotId,
             members,
+            specialAssistance: specialAssistance || 'none',
             qrCode: `BOOK-${Date.now()}-${req.user.id}` // Placeholder QR generation
         }], { session });
 
@@ -71,5 +72,58 @@ exports.getMyBookings = async (req, res) => {
         res.json(bookings);
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Cancel a booking
+// @route   PUT /api/bookings/:id/cancel
+// @access  Private
+exports.cancelBooking = async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        const booking = await Booking.findById(req.params.id).session(session);
+
+        if (!booking) {
+            throw new Error('Booking not found');
+        }
+
+        // Check ownership
+        if (booking.user.toString() !== req.user.id && req.user.role !== 'admin') {
+            throw new Error('Not authorized to cancel this booking');
+        }
+
+        if (booking.status === 'cancelled') {
+            throw new Error('Booking is already cancelled');
+        }
+
+        if (booking.status === 'completed' || booking.status === 'checked-in') {
+            throw new Error('Cannot cancel a completed or checked-in booking');
+        }
+
+        // Update booking status
+        booking.status = 'cancelled';
+        await booking.save({ session });
+
+        // Update slot count
+        const slot = await Slot.findById(booking.slot).session(session);
+        if (slot) {
+            const memberCount = booking.members ? booking.members.length + 1 : 1;
+            slot.bookedCount = Math.max(0, slot.bookedCount - memberCount);
+            await slot.save({ session });
+
+            // Notify clients to refresh slot availability
+            if (req.io) {
+                req.io.emit('slot-update', { slotId: slot._id, bookedCount: slot.bookedCount });
+            }
+        }
+
+        await session.commitTransaction();
+        res.json(booking);
+    } catch (error) {
+        await session.abortTransaction();
+        res.status(400).json({ message: error.message });
+    } finally {
+        session.endSession();
     }
 };

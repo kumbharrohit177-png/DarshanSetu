@@ -57,14 +57,37 @@ exports.getSlots = async (req, res) => {
     }
 };
 
-// @desc    Update slot status (lock/unlock)
+// @desc    Update slot status (lock/unlock) or capacity
 // @route   PUT /api/slots/:id
 // @access  Private/Admin|Police
 exports.updateSlot = async (req, res) => {
     try {
-        const slot = await Slot.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const { isLocked, capacity } = req.body;
+        const updateData = {};
+
+        if (typeof isLocked !== 'undefined') updateData.isLocked = isLocked;
+        if (capacity) updateData.capacity = capacity;
+
+        const slot = await Slot.findByIdAndUpdate(
+            req.params.id,
+            updateData,
+            { new: true }
+        );
+
+        if (!slot) {
+            return res.status(404).json({ message: 'Slot not found' });
+        }
+
         res.json(slot);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
+}
+
+// @desc    Bulk update capacity (for future use)
+// @route   PUT /api/slots/bulk-capacity
+// @access  Private/Admin
+exports.updateSlotCapacity = async (req, res) => {
+    // Placeholder for bulk updates if needed
+    res.status(501).json({ message: 'Not implemented yet' });
 }

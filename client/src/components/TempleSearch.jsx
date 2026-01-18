@@ -1,42 +1,51 @@
-import React, { useState } from 'react';
-import { Search, MapPin } from 'lucide-react';
-
-const TEMPLES = [
-    { id: 1, name: "Kashi Vishwanath", location: "Varanasi, UP" },
-    { id: 2, name: "Tirumala Tirupati", location: "Tirumala, AP" },
-    { id: 3, name: "Vaishno Devi", location: "Katra, J&K" },
-    { id: 4, name: "Golden Temple", location: "Amritsar, Punjab" },
-    { id: 5, name: "Jagannath Temple", location: "Puri, Odisha" },
-    { id: 6, name: "Somnath Temple", location: "Veraval, Gujarat" },
-    { id: 7, name: "Kedarnath Temple", location: "Kedarnath, Uttarakhand" },
-    { id: 8, name: "Badrinath Temple", location: "Badrinath, Uttarakhand" },
-    { id: 9, name: "Meenakshi Temple", location: "Madurai, TN" },
-    { id: 10, name: "Ramanathaswamy", location: "Rameswaram, TN" },
-    { id: 11, name: "Siddhivinayak", location: "Mumbai, Maharashtra" },
-    { id: 12, name: "Shirdi Sai Baba", location: "Shirdi, Maharashtra" },
-    { id: 13, name: "Dwarkadhish", location: "Dwarka, Gujarat" },
-    { id: 14, name: "Akshardham", location: "Delhi" },
-    { id: 15, name: "Konark Sun Temple", location: "Konark, Odisha" },
-    { id: 16, name: "Brihadeeswarar", location: "Thanjavur, TN" },
-    { id: 17, name: "Padmanabhaswamy", location: "Thiruvananthapuram, Kerala" },
-    { id: 18, name: "Sabarimala", location: "Pathanamthitta, Kerala" },
-    { id: 19, name: "Mahakaleshwar", location: "Ujjain, MP" },
-    { id: 20, name: "Kamakhya Temple", location: "Guwahati, Assam" },
-    { id: 21, name: "Prem Mandir", location: "Vrindavan, UP" },
-    { id: 22, name: "Banke Bihari", location: "Vrindavan, UP" },
-    { id: 23, name: "Dakshineswar Kali", location: "Kolkata, WB" },
-    { id: 24, name: "Lingaraj Temple", location: "Bhubaneswar, Odisha" },
-    { id: 25, name: "Amarnath Cave", location: "J&K" },
-];
+import React, { useState, useEffect } from 'react';
+import { Search, MapPin, Clock, Info } from 'lucide-react';
+import api from '../utils/api';
+import { useNavigate } from 'react-router-dom';
 
 const TempleSearch = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [isFocused, setIsFocused] = useState(false);
+    const [temples, setTemples] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-    const filteredTemples = TEMPLES.filter(temple =>
-        temple.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        temple.location.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    useEffect(() => {
+        const fetchTemples = async () => {
+            try {
+                setLoading(true);
+                const { data } = await api.get('/temples');
+                setTemples(data);
+            } catch (error) {
+                console.error("Failed to fetch temples for search", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (isFocused && temples.length === 0) {
+            fetchTemples();
+        }
+    }, [isFocused]);
+
+    // Filter temples: Matching search term AND ensuring they have an image
+    const filteredTemples = searchTerm.trim() === '' ? [] : temples.filter(temple => {
+        const matchesSearch =
+            temple.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            temple.location.toLowerCase().includes(searchTerm.toLowerCase());
+
+        // Strict filter: Must have a valid imageUrl (not empty, not null)
+        const hasImage = temple.imageUrl && temple.imageUrl.trim().length > 0;
+
+        return matchesSearch && hasImage;
+    });
+
+    const handleTempleClick = (temple) => {
+        // Navigate or show details. For now, we can maybe navigate to dashboard with this temple selected?
+        // Or just let user see info. The requirement was "get some info".
+        // Let's just keep it as a viewing experience for now.
+        console.log("Selected temple:", temple);
+    };
 
     return (
         <div className="w-full max-w-2xl mx-auto relative z-[60]">
@@ -49,45 +58,88 @@ const TempleSearch = () => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onFocus={() => setIsFocused(true)}
-                // keeping focus true for demo to show list, or use blur with delay
+                // onBlur={() => setTimeout(() => setIsFocused(false), 200)}
                 />
             </div>
 
             {/* Dropdown Results */}
             {isFocused && (
-                <div className="absolute top-16 left-0 right-0 bg-white rounded-2xl shadow-2xl border border-gray-100 max-h-96 overflow-y-auto overflow-x-hidden z-[100]">
-                    {filteredTemples.length > 0 ? (
+                <div className="absolute top-16 left-0 right-0 bg-white rounded-2xl shadow-2xl border border-gray-100 max-h-[500px] overflow-y-auto overflow-x-hidden z-[100] custom-scrollbar">
+                    {loading ? (
+                        <div className="p-8 text-center text-gray-500 flex items-center justify-center">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mr-2"></div>
+                            Searching sacred sites...
+                        </div>
+                    ) : filteredTemples.length > 0 ? (
                         <>
-                            <div className="px-4 py-2 bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wider sticky top-0">
-                                Popular Temples ({filteredTemples.length})
+                            <div className="px-5 py-3 bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wider sticky top-0 z-10 border-b border-gray-100">
+                                Found {filteredTemples.length} Temples with Gallery
                             </div>
                             {filteredTemples.map((temple) => (
                                 <div
-                                    key={temple.id}
-                                    className="px-6 py-3 hover:bg-primary-50 cursor-pointer flex items-center justify-between border-b border-gray-50 last:border-0 transition-colors"
+                                    key={temple._id}
+                                    onClick={() => handleTempleClick(temple)}
+                                    className="px-4 py-4 hover:bg-orange-50 cursor-pointer border-b border-gray-50 last:border-0 transition-colors group"
                                 >
-                                    <div>
-                                        <h4 className="font-semibold text-gray-800">{temple.name}</h4>
-                                        <div className="flex items-center text-xs text-gray-500 mt-0.5">
-                                            <MapPin className="w-3 h-3 mr-1" />
-                                            {temple.location}
+                                    <div className="flex gap-4">
+                                        {/* Temple Thumbnail */}
+                                        <div className="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden border border-gray-200 shadow-sm relative">
+                                            <img
+                                                src={temple.imageUrl}
+                                                alt={temple.name}
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                                onError={(e) => {
+                                                    // Hide if image fails to load, effectively filtering it out visually or showing placeholder
+                                                    e.target.src = 'https://via.placeholder.com/150?text=No+Image';
+                                                }}
+                                            />
+                                        </div>
+
+                                        {/* Temple Details */}
+                                        <div className="flex-grow">
+                                            <div className="flex justify-between items-start">
+                                                <h4 className="font-bold text-lg text-gray-800 group-hover:text-orange-700 transition-colors">{temple.name}</h4>
+                                                <span className="bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">Open</span>
+                                            </div>
+
+                                            <div className="flex items-center text-sm text-gray-500 mt-1 mb-2">
+                                                <MapPin className="w-3.5 h-3.5 mr-1 text-orange-500" />
+                                                {temple.location}
+                                            </div>
+
+                                            {/* Extra Info Snippet */}
+                                            <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed">
+                                                {temple.description || "A sacred place for spiritual connection and divine blessings."}
+                                            </p>
+
+                                            <div className="flex items-center gap-3 mt-2 text-xs font-medium text-gray-400">
+                                                <span className="flex items-center gap-1">
+                                                    <Clock size={12} />
+                                                    {temple.openingHours || "06:00 - 22:00"}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <button className="text-xs font-medium text-primary-600 border border-primary-200 px-3 py-1 rounded-full hover:bg-primary-600 hover:text-white transition-all">
-                                        View Slots
-                                    </button>
                                 </div>
                             ))}
                         </>
                     ) : (
-                        <div className="p-8 text-center text-gray-500">
-                            No temples found matching "{searchTerm}"
+                        <div className="p-8 text-center bg-gray-50 rounded-b-2xl">
+                            {searchTerm ? (
+                                <>
+                                    <Info className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                    <p className="text-gray-600 font-medium">No temples found matching "{searchTerm}"</p>
+                                    <p className="text-gray-400 text-sm mt-1">Try checking the spelling or search for a major city.</p>
+                                </>
+                            ) : (
+                                <p className="text-gray-400">Start typing to search for temples...</p>
+                            )}
                         </div>
                     )}
                 </div>
             )}
 
-            {/* Overlay to close dropdown when clicking outside - simplified for local demo */}
+            {/* Overlay to close dropdown when clicking outside */}
             {isFocused && (
                 <div
                     className="fixed inset-0 z-[-1]"

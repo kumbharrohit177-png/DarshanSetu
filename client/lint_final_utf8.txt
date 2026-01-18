@@ -1,0 +1,240 @@
+﻿
+> client@0.0.0 lint
+> eslint .
+
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\BookingForm.jsx
+   3:8   error    'socket' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      no-unused-vars
+  26:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  24 |     useEffect(() => {
+  25 |         if (date && templeId) {
+> 26 |             fetchSlots();
+     |             ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  27 |         }
+  28 |     }, [date, templeId]);
+  29 |  react-hooks/set-state-in-effect
+  28:8   warning  React Hook useEffect has a missing dependency: 'fetchSlots'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      react-hooks/exhaustive-deps
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\CrowdStats.jsx
+  36:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  34 |
+  35 |     useEffect(() => {
+> 36 |         fetchStats();
+     |         ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  37 |
+  38 |         // Listen for real-time updates
+  39 |         socket.on('slot-update', () => fetchStats());  react-hooks/set-state-in-effect
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\DeploymentManager.jsx
+  18:9  error  Error: Cannot access variable before it is declared
+
+`fetchDeployments` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  16 |
+  17 |     useEffect(() => {
+> 18 |         fetchDeployments();
+     |         ^^^^^^^^^^^^^^^^ `fetchDeployments` accessed before it is declared
+  19 |
+  20 |         socket.on('deployment-update', (updatedDeployment) => {
+  21 |             setDeployments(prev => {
+
+  33 |     }, []);
+  34 |
+> 35 |     const fetchDeployments = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 36 |         try {
+     | ^^^^^^^^^^^^^
+> 37 |             const { data } = await api.get('/deployments');
+     | ^^^^^^^^^^^^^
+> 38 |             setDeployments(data);
+     | ^^^^^^^^^^^^^
+> 39 |             setLoading(false);
+     | ^^^^^^^^^^^^^
+> 40 |         } catch (error) {
+     | ^^^^^^^^^^^^^
+> 41 |             console.error("Failed to fetch deployments", error);
+     | ^^^^^^^^^^^^^
+> 42 |             setLoading(false);
+     | ^^^^^^^^^^^^^
+> 43 |         }
+     | ^^^^^^^^^^^^^
+> 44 |     };
+     | ^^^^^^^ `fetchDeployments` is declared here
+  45 |
+  46 |     const handleDelete = async (id) => {
+  47 |         if (!window.confirm('Remove this deployment?')) return;  react-hooks/immutability
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\ErrorBoundary.jsx
+  9:37  error  'error' is defined but never used  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\Header.jsx
+  5:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\IncidentList.jsx
+  42:21  error  'data' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\LiveMedicalMap.jsx
+  1:28  error  'useState' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\NotificationToast.jsx
+  3:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\SOSButton.jsx
+  9:11  error  'getPosition' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\admin\AnalyticsCharts.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\admin\SlotControlPanel.jsx
+   4:10  error    'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                  no-unused-vars
+  15:8   warning  React Hook useEffect has a missing dependency: 'fetchSlots'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\admin\ZoneDensityPanel.jsx
+   2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         no-unused-vars
+  11:9   error  Error: Cannot access variable before it is declared
+
+`fetchZones` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+   9 |
+  10 |     useEffect(() => {
+> 11 |         fetchZones();
+     |         ^^^^^^^^^^ `fetchZones` accessed before it is declared
+  12 |         const interval = setInterval(fetchZones, 30000); // Poll every 30s
+  13 |         return () => clearInterval(interval);
+  14 |     }, []);
+
+  14 |     }, []);
+  15 |
+> 16 |     const fetchZones = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 17 |         try {
+     | ^^^^^^^^^^^^^
+> 18 |             const { data } = await api.get('/analytics/zones');
+     | ^^^^^^^^^^^^^
+> 19 |             setZones(data);
+     | ^^^^^^^^^^^^^
+> 20 |             setLoading(false);
+     | ^^^^^^^^^^^^^
+> 21 |         } catch (error) {
+     | ^^^^^^^^^^^^^
+> 22 |             console.error('Error fetching zone density:', error);
+     | ^^^^^^^^^^^^^
+> 23 |             setLoading(false);
+     | ^^^^^^^^^^^^^
+> 24 |         }
+     | ^^^^^^^^^^^^^
+> 25 |     };
+     | ^^^^^^^ `fetchZones` is declared here
+  26 |
+  27 |     const getStatusColor = (percent) => {
+  28 |         if (percent >= 90) return 'bg-red-500';  react-hooks/immutability
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\context\AuthContext.jsx
+   6:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+  66:11  error  'googleLogin' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                     no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\pages\AdminDashboard.jsx
+  17:13  error  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\pages\Dashboard.jsx
+  46:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  44 |         let watchId;
+  45 |         if (user) {
+> 46 |             fetchBookings();
+     |             ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  47 |             fetchTemples();
+  48 |
+  49 |             // Start sharing live location  react-hooks/set-state-in-effect
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\pages\Landing.jsx
+   3:10  error    'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       no-unused-vars
+  60:8   warning  React Hook React.useEffect has a missing dependency: 'backgroundImages.length'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/exhaustive-deps
+  88:37  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  86 |                 {/* Floating particles/sparkles - more vibrant */}
+  87 |                 {[...Array(30)].map((_, i) => {
+> 88 |                     const randomX = Math.random() * 100;
+     |                                     ^^^^^^^^^^^^^ Cannot call impure function
+  89 |                     const randomY = Math.random() * 100;
+  90 |                     const randomDelay = Math.random() * 2;
+  91 |                     const randomDuration = Math.random() * 3 + 2;  react-hooks/purity
+  89:37  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  87 |                 {[...Array(30)].map((_, i) => {
+  88 |                     const randomX = Math.random() * 100;
+> 89 |                     const randomY = Math.random() * 100;
+     |                                     ^^^^^^^^^^^^^ Cannot call impure function
+  90 |                     const randomDelay = Math.random() * 2;
+  91 |                     const randomDuration = Math.random() * 3 + 2;
+  92 |                     const colorClasses = [                          react-hooks/purity
+  90:41  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  88 |                     const randomX = Math.random() * 100;
+  89 |                     const randomY = Math.random() * 100;
+> 90 |                     const randomDelay = Math.random() * 2;
+     |                                         ^^^^^^^^^^^^^ Cannot call impure function
+  91 |                     const randomDuration = Math.random() * 3 + 2;
+  92 |                     const colorClasses = [
+  93 |                         'bg-amber-400/60',                           react-hooks/purity
+  91:44  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  89 |                     const randomY = Math.random() * 100;
+  90 |                     const randomDelay = Math.random() * 2;
+> 91 |                     const randomDuration = Math.random() * 3 + 2;
+     |                                            ^^^^^^^^^^^^^ Cannot call impure function
+  92 |                     const colorClasses = [
+  93 |                         'bg-amber-400/60',
+  94 |                         'bg-orange-400/60',                                     react-hooks/purity
+  98:64  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+   96 |                         'bg-rose-400/60'
+   97 |                     ];
+>  98 |                     const colorClass = colorClasses[Math.floor(Math.random() * colorClasses.length)];
+      |                                                                ^^^^^^^^^^^^^ Cannot call impure function
+   99 |                     return (
+  100 |                         <motion.div
+  101 |                             key={i}                                                       react-hooks/purity
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\pages\Login.jsx
+  51:34  error  'err' is defined but never used  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\pages\MedicalDashboard.jsx
+  12:13  error  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\pages\PoliceDashboard.jsx
+  13:13  error  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  63:35  error  'incident' is defined but never used                                                  no-unused-vars
+
+Γ£û 31 problems (28 errors, 3 warnings)
+

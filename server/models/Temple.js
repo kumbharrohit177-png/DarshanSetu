@@ -20,6 +20,18 @@ const templeSchema = new mongoose.Schema({
     openingHours: {
         type: String, // e.g., "06:00 - 22:00"
         default: "06:00 - 22:00"
+    },
+    deity: {
+        type: String, // e.g., "Lord Shiva"
+        default: "Main Deity"
+    },
+    architecture: {
+        type: String, // e.g., "Dravidian"
+        default: "Ancient"
+    },
+    festivals: {
+        type: [String], // e.g., ["Maha Shivratri", "Kartik Purnima"]
+        default: []
     }
 }, {
     timestamps: true

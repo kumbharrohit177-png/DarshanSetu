@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.post('/', protect, createBooking);
 router.get('/my', protect, getMyBookings);
+router.put('/:id/cancel', protect, require('../controllers/bookingController').cancelBooking);
 
 module.exports = router;

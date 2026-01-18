@@ -4,10 +4,12 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
+const alertController = require('./controllers/alertController');
 
 dotenv.config();
 
 const app = express();
+console.log('Force Restart: Schema Update Reflected');
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
@@ -15,6 +17,13 @@ const io = new Server(httpServer, {
     methods: ["GET", "POST"]
   }
 });
+
+// Initialize Socket.IO in Alert Controller
+alertController.setSocketIo(io);
+
+// Start Automated Crowd Control Service
+const { startCrowdControlService } = require('./services/crowdControlService');
+startCrowdControlService();
 
 // Middleware
 app.use(cors());
@@ -32,11 +41,26 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/temple-crow
   .catch(err => console.log(err));
 
 // Routes Configuration
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/slots', require('./routes/slotRoutes'));
-app.use('/api/bookings', require('./routes/bookingRoutes'));
-app.use('/api/incidents', require('./routes/incidentRoutes'));
-app.use('/api/temples', require('./routes/templeRoutes'));
+const authRoutes = require('./routes/authRoutes');
+const slotRoutes = require('./routes/slotRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
+const incidentRoutes = require('./routes/incidentRoutes');
+const templeRoutes = require('./routes/templeRoutes');
+const deploymentRoutes = require('./routes/deploymentRoutes');
+const medicalRoutes = require('./routes/medicalRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
+
+app.use('/api/auth', authRoutes);
+app.use('/api/slots', slotRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/incidents', incidentRoutes);
+app.use('/api/temples', templeRoutes);
+app.use('/api/deployments', deploymentRoutes);
+app.use('/api/medical', medicalRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/payment', paymentRoutes);
+app.post('/api/alerts/send', alertController.sendAlert);
 
 app.get('/', (req, res) => {
   res.send('Temple Crowd Management API');
@@ -45,6 +69,43 @@ app.get('/', (req, res) => {
 // Socket.io Connection
 io.on('connection', (socket) => {
   console.log('New client connected:', socket.id);
+
+  socket.on('join-room', (room) => {
+    socket.join(room);
+  });
+
+  socket.on('update-location', (data) => {
+    // Broadcast location update to all clients (or specifically to 'staff' room if implemented)
+    // data should contain { userId, role, lat, lng, timestamp }
+    io.emit('pilgrim-location-update', data);
+  });
+
+  // Medical resource location updates
+  socket.on('medical-resource-location', async (data) => {
+    // data should contain { resourceId, lat, lng, zone }
+    try {
+      const MedicalResource = require('./models/MedicalResource');
+      const resource = await MedicalResource.findById(data.resourceId);
+      if (resource) {
+        resource.location = {
+          lat: data.lat,
+          lng: data.lng,
+          zone: data.zone || resource.location?.zone,
+          lastUpdated: new Date()
+        };
+        resource.lastUpdated = new Date();
+        await resource.save();
+        
+        // Broadcast to all medical dashboards
+        io.emit('medical-resource-location-update', {
+          resourceId: resource._id,
+          location: resource.location
+        });
+      }
+    } catch (error) {
+      console.error('Error updating medical resource location:', error);
+    }
+  });
 
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);

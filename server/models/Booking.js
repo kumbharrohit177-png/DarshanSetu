@@ -20,6 +20,11 @@ const bookingSchema = new mongoose.Schema({
         enum: ['booked', 'checked-in', 'cancelled', 'completed'],
         default: 'booked',
     },
+    specialAssistance: {
+        type: String,
+        enum: ['none', 'elderly', 'differently-abled', 'women-with-children'],
+        default: 'none',
+    },
     qrCode: {
         type: String,
         // Store QR code data or URL

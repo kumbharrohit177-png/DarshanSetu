@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Header from './components/Header';
@@ -9,16 +10,19 @@ import AdminDashboard from './pages/AdminDashboard';
 import PoliceDashboard from './pages/PoliceDashboard';
 import MedicalDashboard from './pages/MedicalDashboard';
 import Landing from './pages/Landing';
+import MyBookings from './pages/MyBookings';
 import ProtectedRoute from './components/ProtectedRoute';
 import DebugSession from './components/DebugSession';
+import NotificationToast from './components/NotificationToast';
 
 function App() {
   return (
     <Router>
       <AuthProvider>
         <div className="min-h-screen bg-gray-50 pt-20">
-          <DebugSession />
+
           <Header />
+          <NotificationToast />
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
@@ -27,6 +31,7 @@ function App() {
             {/* Protected Routes */}
             <Route element={<ProtectedRoute allowedRoles={['pilgrim', 'admin', 'police', 'medical']} />}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/my-bookings" element={<MyBookings />} />
             </Route>
 
             <Route element={<ProtectedRoute allowedRoles={['admin']} />}>

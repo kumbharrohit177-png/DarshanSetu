@@ -1,0 +1,307 @@
+﻿
+> client@0.0.0 lint
+> eslint .
+
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\BookingForm.jsx
+  17:13  error    Error: Cannot access variable before it is declared
+
+`fetchSlots` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  15 |     useEffect(() => {
+  16 |         if (date && templeId) {
+> 17 |             fetchSlots();
+     |             ^^^^^^^^^^ `fetchSlots` accessed before it is declared
+  18 |         }
+  19 |     }, [date, templeId]);
+  20 |
+
+  30 |     }, []);
+  31 |
+> 32 |     const fetchSlots = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 33 |         try {
+     | ^^^^^^^^^^^^^
+> 34 |             const { data } = await api.get(`/slots?date=${date}&temple=${templeId}`);
+     | ^^^^^^^^^^^^^
+> 35 |             setSlots(data);
+     | ^^^^^^^^^^^^^
+> 36 |         } catch (err) {
+     | ^^^^^^^^^^^^^
+> 37 |             console.error(err);
+     | ^^^^^^^^^^^^^
+> 38 |         }
+     | ^^^^^^^^^^^^^
+> 39 |     };
+     | ^^^^^^^ `fetchSlots` is declared here
+  40 |
+  41 |     const handleBook = async () => {
+  42 |         if (!selectedSlot) return;  react-hooks/immutability
+  19:8   warning  React Hook useEffect has a missing dependency: 'fetchSlots'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          react-hooks/exhaustive-deps
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\CrowdStats.jsx
+  14:9  error  Error: Cannot access variable before it is declared
+
+`fetchStats` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  12 |
+  13 |     useEffect(() => {
+> 14 |         fetchStats();
+     |         ^^^^^^^^^^ `fetchStats` accessed before it is declared
+  15 |
+  16 |         // Listen for real-time updates
+  17 |         socket.on('slot-update', () => fetchStats());
+
+  26 |     }, []);
+  27 |
+> 28 |     const fetchStats = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 29 |         try {
+     | ^^^^^^^^^^^^^
+> 30 |             // In a real app, you'd have a dedicated stats endpoint.
+     ΓÇª
+     | ^^^^^^^^^^^^^
+> 47 |         }
+     | ^^^^^^^^^^^^^
+> 48 |     };
+     | ^^^^^^^ `fetchStats` is declared here
+  49 |
+  50 |     const statItems = [
+  51 |         { title: 'Current Footfall', value: '1,245', icon: User, color: 'text-blue-600', bg: 'bg-blue-100' }, // Mock for now  react-hooks/immutability
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\DeploymentManager.jsx
+  18:9  error  Error: Cannot access variable before it is declared
+
+`fetchDeployments` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  16 |
+  17 |     useEffect(() => {
+> 18 |         fetchDeployments();
+     |         ^^^^^^^^^^^^^^^^ `fetchDeployments` accessed before it is declared
+  19 |
+  20 |         socket.on('deployment-update', (updatedDeployment) => {
+  21 |             setDeployments(prev => {
+
+  33 |     }, []);
+  34 |
+> 35 |     const fetchDeployments = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 36 |         try {
+     | ^^^^^^^^^^^^^
+> 37 |             const { data } = await api.get('/deployments');
+     | ^^^^^^^^^^^^^
+> 38 |             setDeployments(data);
+     | ^^^^^^^^^^^^^
+> 39 |             setLoading(false);
+     | ^^^^^^^^^^^^^
+> 40 |         } catch (error) {
+     | ^^^^^^^^^^^^^
+> 41 |             console.error("Failed to fetch deployments", error);
+     | ^^^^^^^^^^^^^
+> 42 |             setLoading(false);
+     | ^^^^^^^^^^^^^
+> 43 |         }
+     | ^^^^^^^^^^^^^
+> 44 |     };
+     | ^^^^^^^ `fetchDeployments` is declared here
+  45 |
+  46 |     const handleDelete = async (id) => {
+  47 |         if (!window.confirm('Remove this deployment?')) return;  react-hooks/immutability
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\ErrorBoundary.jsx
+  9:37  error  'error' is defined but never used  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\Header.jsx
+  5:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\IncidentList.jsx
+  42:21  error  'data' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\LiveMedicalMap.jsx
+  1:28  error  'useState' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\NotificationToast.jsx
+   3:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          no-unused-vars
+  17:21  error  Error: Cannot access variable before it is declared
+
+`removeAlert` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  15 |             if (data.severity !== 'critical') {
+  16 |                 setTimeout(() => {
+> 17 |                     removeAlert(id);
+     |                     ^^^^^^^^^^^ `removeAlert` accessed before it is declared
+  18 |                 }, 10000);
+  19 |             }
+  20 |         };
+
+  27 |     }, []);
+  28 |
+> 29 |     const removeAlert = (id) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 30 |         setAlerts(prev => prev.filter(alert => alert.id !== id));
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 31 |     };
+     | ^^^^^^^ `removeAlert` is declared here
+  32 |
+  33 |     const getStyles = (severity) => {
+  34 |         switch (severity) {  react-hooks/immutability
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\SOSButton.jsx
+  9:11  error  'getPosition' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\admin\AnalyticsCharts.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\admin\SlotControlPanel.jsx
+   4:10  error    'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                  no-unused-vars
+  15:8   warning  React Hook useEffect has a missing dependency: 'fetchSlots'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\components\admin\ZoneDensityPanel.jsx
+   1:17  error  'useState' is defined but never used. Allowed unused vars must match /^[A-Z_]/u   no-unused-vars
+   1:27  error  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+   2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+   3:10  error  'api' is defined but never used. Allowed unused vars must match /^[A-Z_]/u        no-unused-vars
+  18:18  error  'zones' is not defined                                                            no-undef
+  41:67  error  'getStatusColor' is not defined                                                   no-undef
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\context\AuthContext.jsx
+   6:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+  66:11  error  'googleLogin' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                     no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\pages\AdminDashboard.jsx
+  17:13  error  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\pages\Dashboard.jsx
+  23:13  error  Error: Cannot access variable before it is declared
+
+`fetchBookings` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  21 |         let watchId;
+  22 |         if (user) {
+> 23 |             fetchBookings();
+     |             ^^^^^^^^^^^^^ `fetchBookings` accessed before it is declared
+  24 |             fetchTemples();
+  25 |
+  26 |             // Start sharing live location
+
+  52 |     }, [user]);
+  53 |
+> 54 |     const fetchBookings = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 55 |         try {
+     | ^^^^^^^^^^^^^
+> 56 |             const { data } = await api.get('/bookings/my');
+     | ^^^^^^^^^^^^^
+> 57 |             setBookings(data);
+     | ^^^^^^^^^^^^^
+> 58 |         } catch (error) {
+     | ^^^^^^^^^^^^^
+> 59 |             console.error("Failed to fetch bookings", error);
+     | ^^^^^^^^^^^^^
+> 60 |         }
+     | ^^^^^^^^^^^^^
+> 61 |     };
+     | ^^^^^^^ `fetchBookings` is declared here
+  62 |
+  63 |     const fetchTemples = async () => {
+  64 |         try {  react-hooks/immutability
+  24:13  error  Error: Cannot access variable before it is declared
+
+`fetchTemples` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  22 |         if (user) {
+  23 |             fetchBookings();
+> 24 |             fetchTemples();
+     |             ^^^^^^^^^^^^ `fetchTemples` accessed before it is declared
+  25 |
+  26 |             // Start sharing live location
+  27 |             if (navigator.geolocation) {
+
+  61 |     };
+  62 |
+> 63 |     const fetchTemples = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 64 |         try {
+     | ^^^^^^^^^^^^^
+> 65 |             setLoadingTemples(true);
+     ΓÇª
+     | ^^^^^^^^^^^^^
+> 74 |         }
+     | ^^^^^^^^^^^^^
+> 75 |     };
+     | ^^^^^^^ `fetchTemples` is declared here
+  76 |
+  77 |     if (!user) {
+  78 |         console.log("Dashboard: Waiting for user...");                                                                                                                                                                                                     react-hooks/immutability
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\pages\Landing.jsx
+   3:10  error    'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       no-unused-vars
+  60:8   warning  React Hook React.useEffect has a missing dependency: 'backgroundImages.length'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/exhaustive-deps
+  88:37  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  86 |                 {/* Floating particles/sparkles - more vibrant */}
+  87 |                 {[...Array(30)].map((_, i) => {
+> 88 |                     const randomX = Math.random() * 100;
+     |                                     ^^^^^^^^^^^^^ Cannot call impure function
+  89 |                     const randomY = Math.random() * 100;
+  90 |                     const randomDelay = Math.random() * 2;
+  91 |                     const randomDuration = Math.random() * 3 + 2;  react-hooks/purity
+  89:37  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  87 |                 {[...Array(30)].map((_, i) => {
+  88 |                     const randomX = Math.random() * 100;
+> 89 |                     const randomY = Math.random() * 100;
+     |                                     ^^^^^^^^^^^^^ Cannot call impure function
+  90 |                     const randomDelay = Math.random() * 2;
+  91 |                     const randomDuration = Math.random() * 3 + 2;
+  92 |                     const colorClasses = [                          react-hooks/purity
+  90:41  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  88 |                     const randomX = Math.random() * 100;
+  89 |                     const randomY = Math.random() * 100;
+> 90 |                     const randomDelay = Math.random() * 2;
+     |                                         ^^^^^^^^^^^^^ Cannot call impure function
+  91 |                     const randomDuration = Math.random() * 3 + 2;
+  92 |                     const colorClasses = [
+  93 |                         'bg-amber-400/60',                           react-hooks/purity
+  91:44  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+  89 |                     const randomY = Math.random() * 100;
+  90 |                     const randomDelay = Math.random() * 2;
+> 91 |                     const randomDuration = Math.random() * 3 + 2;
+     |                                            ^^^^^^^^^^^^^ Cannot call impure function
+  92 |                     const colorClasses = [
+  93 |                         'bg-amber-400/60',
+  94 |                         'bg-orange-400/60',                                     react-hooks/purity
+  98:64  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+   96 |                         'bg-rose-400/60'
+   97 |                     ];
+>  98 |                     const colorClass = colorClasses[Math.floor(Math.random() * colorClasses.length)];
+      |                                                                ^^^^^^^^^^^^^ Cannot call impure function
+   99 |                     return (
+  100 |                         <motion.div
+  101 |                             key={i}                                                       react-hooks/purity
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\pages\Login.jsx
+  51:34  error  'err' is defined but never used  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\pages\MedicalDashboard.jsx
+  12:13  error  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\kumbh\Documents\temple-crowd-management\client\src\pages\PoliceDashboard.jsx
+  13:13  error  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  63:35  error  'incident' is defined but never used                                                  no-unused-vars
+
+Γ£û 36 problems (33 errors, 3 warnings)
+

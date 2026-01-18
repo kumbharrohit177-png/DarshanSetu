@@ -36,9 +36,20 @@ app.use((req, res, next) => {
 });
 
 // Database Connection
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/temple-crowd-management')
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log(err));
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/temple-crowd-management', {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error(`Error: ${error.message}`);
+    // Don't exit process in dev/production to allow retry or viewing logs without crash loop if possible, 
+    // though usually we want to crash if DB fails. keeping it simple.
+  }
+};
+connectDB();
 
 // Routes Configuration
 const authRoutes = require('./routes/authRoutes');
@@ -95,7 +106,7 @@ io.on('connection', (socket) => {
         };
         resource.lastUpdated = new Date();
         await resource.save();
-        
+
         // Broadcast to all medical dashboards
         io.emit('medical-resource-location-update', {
           resourceId: resource._id,
